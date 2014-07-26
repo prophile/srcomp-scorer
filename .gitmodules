@@ -1,6 +1,6 @@
 [submodule "srcomp"]
 	path = srcomp
-	url = git://srobo.org/comp/srcomp
+	url = https://github.com/prophile/srcomp
 [submodule "compstate"]
 	path = compstate
-	url = git://srobo.org/comp/sr2014-comp
+	url = https://github.com/tomleese/smallpeice2014-compstate

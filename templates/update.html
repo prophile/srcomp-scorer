@@ -16,15 +16,11 @@
     <form method="POST">
         <table class="update_form">
             <tr>
-                <th>Corner</th>
-                <td>0</td>
-                <td>1</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-
-            <tr>
-                <th colspan="5">Robot Information</th>
+                <td></td>
+                <th>Zone 0</th>
+                <th>Zone 1</th>
+                <th>Zone 2</th>
+                <th>Zone 3</th>
             </tr>
 
             <tr>
@@ -79,12 +75,12 @@
             </tr>
 
             <tr>
-                <th>Number of upright tokens in the arena?</th>
+                <th>Number of gold tokens?</th>
                 {% for i in range(4) %}
                     <td>
                         {% if match["teams"][i] is not none %}
-                            <input type="number" name="upright_tokens_{{ i }}"
-                                value="{{ request.form.get("upright_tokens_{}".format(i), 0) }}"
+                            <input type="number" name="gold_tokens_{{ i }}"
+                                value="{{ request.form.get("gold_tokens_{}".format(i), 0) }}"
                                 required min="0" max="100" />
                         {% endif %}
                     </td>
@@ -92,40 +88,17 @@
             </tr>
 
             <tr>
-                <th colspan="5">How many tokens does the team have in each zone?</th>
+                <th>Number of silver tokens?</th>
+                {% for i in range(4) %}
+                    <td>
+                        {% if match["teams"][i] is not none %}
+                            <input type="number" name="silver_tokens_{{ i }}"
+                                value="{{ request.form.get("silver_tokens_{}".format(i), 0) }}"
+                                required min="0" max="100" />
+                        {% endif %}
+                    </td>
+                {% endfor %}
             </tr>
-
-            {% for j in range(4) %}
-                <tr>
-                    <th>Zone {{ j }}</th>
-                    {% for i in range(4) %}
-                        <td>
-                            {% if match["teams"][i] is not none %}
-                                <input type="number" name="zone_tokens_{{ j }}_{{ i }}"
-                                    value="{{ request.form.get("zone_tokens_{}_{}".format(j, i), 0) }}" />
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-
-            <tr>
-                <th colspan="5">Which slot does the team have tokens at the bottom of?</th>
-            </tr>
-
-            {% for j in range(8) %}
-                <tr>
-                    <th>Slot {{ j }}</th>
-                    {% for i in range(4) %}
-                        <td>
-                            {% if match["teams"][i] is not none %}
-                                <input type="radio" name="slot_bottoms_{{ j }}"
-                                    value="{{ i }}" {{ "checked" if int(request.form.get("slot_bottoms_{}".format(j), -1)) == i else "" }} />
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
         </table>
 
         <br />

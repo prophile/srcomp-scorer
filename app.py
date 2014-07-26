@@ -9,6 +9,7 @@ import os.path
 import srcomp
 import srcomp.validation
 import subprocess
+import traceback
 import yaml
 
 
@@ -82,26 +83,14 @@ def form_to_score(match, form):
     def form_team_to_score(zone, teams):
         tla = form.get("team_tla_{}".format(zone), None)
         if tla:
-            team = {
+            teams[tla] = {
                 "zone": zone,
                 "disqualified": form.get("disqualified_{}".format(zone), None) is not None,
                 "present": form.get("absent_{}".format(zone), None) is None,
                 "robot_moved": form.get("robot_moved_{}".format(zone), None) is not None,
-                "upright_tokens": int(form["upright_tokens_{}".format(zone)]),
-                "zone_tokens": {},
-                "slot_bottoms": {x: 0 for x in range(8)}
+                "silver": int(form["silver_tokens_{}".format(zone)]),
+                "gold": int(form["gold_tokens_{}".format(zone)])
             }
-
-            for i in range(4):
-                v = form["zone_tokens_{}_{}".format(i, zone)]
-                team["zone_tokens"][i] = int(v)
-
-            for i in range(8):
-                selected_zone = int(form.get("slot_bottoms_{}".format(i), -1))
-                if selected_zone == zone:
-                    team["slot_bottoms"][i] = 1
-
-            teams[tla] = team
 
     teams = {}
     form_team_to_score(0, teams)
@@ -125,14 +114,8 @@ def score_to_form(score):
         form["disqualified_{}".format(i)] = info.get("disqualified", False)
         form["absent_{}".format(i)] = not info.get("present", True)
         form["robot_moved_{}".format(i)] = info.get("robot_moved", True)
-        form["upright_tokens_{}".format(i)] = info.get("upright_tokens", True)
-
-        for j in range(4):
-            form["zone_tokens_{}_{}".format(j, i)] = info["zone_tokens"][j]
-
-        for j in range(8):
-            if info["slot_bottoms"][j]:
-                form["slot_bottoms_{}".format(j)] = i
+        form["silver_tokens_{}".format(i)] = info.get("silver", True)
+        form["gold_tokens_{}".format(i)] = info.get("gold", True)
 
     return form
 
@@ -167,6 +150,7 @@ def update_and_validate_compstate(match, score):
     try:
         comp = get_competition()
     except Exception as e:  # SRComp sometimes throws generic Exceptions
+        traceback.print_exc()
         # we have to reset the repo because SRComp fails to instantiate and that
         # would break everything!
         reset_compstate()
