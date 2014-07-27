@@ -216,8 +216,7 @@ def update(arena, num):
             return flask.render_template("update.html", match=match,
                                          error=str(e))
         else:
-            target_uri = flask.url_for('update', arena=arena, num=num)
-            return flask.redirect("{}?done=true".format(target_uri))
+            return flask.render_template("update.html", match=match, done=True)
 
     return flask.render_template("update.html", match=match, done=flask.request.args.get("done", False))
 
