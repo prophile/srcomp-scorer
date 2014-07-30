@@ -169,6 +169,7 @@ def commit_and_push_compstate(match):
     try:
         subprocess.check_call(["git", "commit", "-m", commit_msg],
                             cwd=app.config['COMPSTATE'])
+        open('{}/.update-pls'.format(app.config['COMPSTATE']), 'w').close()
         if app.config['COMPSTATE_LOCAL']:
             return
         subprocess.check_call(["git", "push", "origin", "master"],
